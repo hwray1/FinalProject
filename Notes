@@ -1,0 +1,38 @@
+simulate movement of individuals through time (discrete)
+	Out-most for loop
+	-track what happens to populations
+	-steps in weeks
+	-each step(1wk)- can stay in population or move to new pop
+		use landscape method for movement
+
+	if indivdual moves
+		remove from old list
+		add to new list
+		** OUTSIDE OF THE FOR LOOP
+
+	calculate and print frequency of phenotype of individuals
+	trajectory graph
+		phenotype freq
+		population sizes
+		create plots
+
+
+class Individual (self, phenotype)
+	phenotype attribute
+
+class Population (self, popSize, phenotype)
+	list of individuals	
+		all individuals in a population have same phenotype INITIALLY
+	method to add a joining individual
+	method to remove a leaving individual
+
+class landscape (self, numPopulations)
+	list of all populations
+	
+	dispersal probabilities to determine if an individual moves or stays(matrix)(2D list?)
+	
+	set starting pop size
+		total number of individuals stay constant
+		populations may change size
+
+	method to determine movement based on dispersal matrix

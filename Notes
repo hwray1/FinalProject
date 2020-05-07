@@ -17,22 +17,59 @@ simulate movement of individuals through time (discrete)
 		create plots
 
 
-class Individual (self, phenotype)
-	phenotype attribute
+class individual:
+    """ """
+    def __init__(self,phenotype):
+        """ """
+        self.phenotype = phenotype
 
-class Population (self, popSize, phenotype)
-	list of individuals	
-		all individuals in a population have same phenotype INITIALLY
-	method to add a joining individual
-	method to remove a leaving individual
 
-class landscape (self, numPopulations)
-	list of all populations
-	
-	dispersal probabilities to determine if an individual moves or stays(matrix)(2D list?)
-	
-	set starting pop size
-		total number of individuals stay constant
-		populations may change size
+class population:
+    """ """
+    def _init_(self,popSize,phenotype):
+        """ """
+        self.popSize = popSize
+        indList = []
+        
+        for i in range(popSize):
+            self.indList.append(individual(phenotype))
+        
+    def addMember(self, joiner):
+        """ """
+        self.indList.append(joiner)
+        
+    def removeMember(self, leaver):
+        """ """
+        self.indList.append(leaver)
 
-	method to determine movement based on dispersal matrix
+
+class landscape:
+	""" """
+	def _init_(self,numIndividuals,phenoList):
+        """ """
+        self.phenoList = phenoList
+        self.numPopulations = len(phenoList)
+
+        self.popList = []
+        for i in phenoList:
+        	self.popList.append(population(numIndividuals,1))
+
+        self.moveMatrix = []
+        self.createMatrix(self.numPopulations)
+
+    def createMatrix(self,numPopulations):
+    	""" """
+    	for x in range(numPopulations):
+
+    		col = []
+    		for y in range(numPopulations):
+    			col.append(random.randrange(100))
+
+    		self.moveMatrix.append(col)
+
+
+#    def move(self):
+#    	""" """
+#    	for x in popList
+#
+#    		for y in 

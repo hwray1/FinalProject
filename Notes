@@ -1,86 +1,203 @@
+import random
+import matplotlib.pyplot as plt
+
+
+
 
 class individual:
-    """ """
-    def __init__(self,phenotype):
-        """ """
+    """ Class to hold phenotype for individuals. """
+    
+    def __init__(self, phenotype):
+        """ Constructor for individual class. """
+        
         self.phenotype = phenotype
 
 
+
+
 class population:
-    """ """
-    def _init_(self,popSize,phenotype):
-        """ """
-        self.popSize = popSize
-        indList = []
-        
-        for i in range(popSize):
+    """ Class representing group of individuals in the same area within a landscape. Uses method countPopulation() to perform weekly count of phenotype groups in population. """
+
+
+    def __init__(self, initPopSize, phenotype, numPhenotypes):
+        """ Constructor for population class. Creates list of lists for number of individuals of each phenotype present each week. """
+
+        # Create list of all of the individuals in population.
+        self.indList = []
+
+        # Create list of the total number of individuals in population each week.
+        self.popSize = []
+
+        # Create list of lists for number of individuals of each phenotype present each week. First list is phenotype of population, list within is weekly count for that phenotype.
+        self.phenoPopList=[]
+
+
+        # Creating lists within the phenoPopList.
+        for i in range(numPhenotypes):
+            self.phenoPopList.append([])
+
+        # Create popSize number of individuals with same phenotype and add them to the population's indList.
+        for i in range(initPopSize):
             self.indList.append(individual(phenotype))
-        
+
+
+
+    def countPopulation(self, phenotypeList):
+        """ Weekly count of phenotype groups within population. """
+
+        # Add the current population size (length of indList) to the popSize weekly list.
+        self.popSize.append(len(self.indList))
+
+        # Loop through phenotype list and select a phenotype and its position. Set phenoCounter equal to 0.
+        for phenoPosition, phenotype in enumerate(phenotypeList):
+            phenoCounter = 0
+
+            # Loop through individuals in population. If the individuals phenotype is the same as phenoype of outer loop, add 1 phenoCounter.
+            for individual in self.indList:
+                if individual.phenotype == phenotype:
+                    phenoCounter = phenoCounter + 1
+
+            # Add weekly count to list for specific phenotype.
+            self.phenoPopList[phenoPosition].append(phenoCounter)
+
+
+
     def addMember(self, joiner):
-        """ """
+        """ Adds individual joining population. """
         self.indList.append(joiner)
-        
+
+
     def removeMember(self, leaver):
-        """ """
+        """ Removes individual leaving population. """
         self.indList.remove(leaver)
 
 
+
+
 class landscape:
-	""" """
-	def _init_(self,numIndividuals,phenoList):
-        """ """
+    """ Represent group of all populations. Creates a move decision matrix that determines if and where an indivudal moves between populations, and then moves them accordingly. Plots phenotype frequency and total number of individuals in a population for each population. """
+
+
+    def __init__(self, phenoList, numIndividuals=10):
+        """ Constructor for landscape class. Populates phenoList with numIndividuals of specific phenotype. Creates move decision matrix. """
+
         self.phenoList = phenoList
+
+        # Assumes each population has different phenotype.
         self.numPopulations = len(phenoList)
 
+        # Create list of populations.
         self.popList = []
-        for i in phenoList:
-        	self.popList.append(population(numIndividuals,i))
 
+
+        # Populating list with populations whose initial individuals have a certain phenotype.
+        for pheno in phenoList:
+            self.popList.append(population(numIndividuals, pheno, self.numPopulations))
+
+
+        # Initial population count.
+        for pop in self.popList:
+            pop.countPopulation(self.phenoList)
+
+
+        # Create move decision matrix based on number of populations.
         self.moveMatrix = []
         self.createMatrix(self.numPopulations)
 
-    def createMatrix(self,numPopulations):
-    	""" """
-    	for i in range(numPopulations):
-    		col = []
-    		for x in range(numPopulations):
-    			col.append(random.randrange(100))
 
-    		self.moveMatrix.append(col)
+
+    def createMatrix(self, numPopulations):
+        """ Create matrix for likelihoods of movement between populations. """
+
+        # Create numPopulations number of rows.
+        for r in range(numPopulations):
+
+            col = []
+
+            # Create numPopulations number of columns.
+            for c in range(numPopulations):
+
+                # Generate random likelihoods.
+                col.append(random.randrange(100))
+
+            # Add row to matrix.
+            self.moveMatrix.append(col)
+
 
 
     def move(self):
-    	""" """
-    	moveList = []
+        """ Decides if the indiviudal moves, to where they will move, and moves them. Performs weekly population count. """
 
-	for popPosition, currentPop in enumerate(self.popList):
-	
-		for ind in currentPop.indList:
-			choice = random.choice(self.popList, self. moveMatrix[popPosition])
-			targetPop = choice[0]
+        # Creates list for individuals that chose to move.
+        moveList = []
 
-			if targetPop != currentPop:
-				moveList.append((ind, currentPop, targetPop))
+        # Loop through popList and select a population (currentPop) and its position.
+        for popPosition, currentPop in enumerate(self.popList):
 
-	for i in moveList:
-		currentIndividual = i[0]
-		currentPopMove = i[1]
-		targetPopMove = i[2]
+            # Loop through individuals in currentPop, use moveMatrix and popList to chose where to go.
+            for ind in currentPop.indList:
+                choice = random.choices(self.popList, self.moveMatrix[popPosition])
+                targetPop = choice[0]
 
-		currentPopMove.removeMember(currentIndividual)
-
-		targetPopMove.addMember(currentIndividual)
+                # If individual chooses not to stay in currentPop, add individual to a list of individuals to be moved using its currentPop and targetPop.
+                if targetPop != currentPop:
+                    moveList.append((ind, currentPop, targetPop))
 
 
+        # Loop through individuals that have chosen to move. 
+        for i in moveList:
+            currentIndividual = i[0]
+            currentPopMove = i[1]
+            targetPopMove = i[2]
+
+            # currentIndividual leaves currentPop.
+            currentPopMove.removeMember(currentIndividual)
+
+            # currentIndividual joins targetPop.
+            targetPopMove.addMember(currentIndividual)
 
 
-graph populations
-	xList = range(steps)
-	yList = number of individuals in each population
-		each population is separate list- graph as separate lines
+        # Does a weekly population count.
+        for population in self.popList:
+            population.countPopulation(self.phenoList)
 
-graph trajectories for phenotype
-	xList = range(steps)
-	yList = phenotype frequency for each population
-		each population is separate list- graph as separate lines
-		each phenotype is a subplot
+
+
+    def plot(self):
+        """ Plots the phenotype frequencies and total population size for each population. """
+
+        # Uses length of popSize list to determine number of weeks.
+        xList = range(len(self.popList[0].popSize))
+
+
+        # Sizing of graph for easier reading and adds title.
+        plt.figure(figsize=(6, 10))
+        plt.title('Phenotype Frequency / Time')
+
+
+        # Loop through list of populations to create subplots for each one. Also adds title, grid, ticks, and labels.
+        for popPosition, population in enumerate(self.popList):
+
+            plt.subplot(self.numPopulations, 1, popPosition+1)
+            plt.title('Population ' + str(popPosition))
+            plt.grid(True, alpha=0.4)
+            plt.xticks(xList, xList)
+            plt.ylabel('#  of Individuals')
+            plt.xlabel('Week')
+
+
+            # Loop through phenoPopList to create lines for each phenotype.
+            for phenoPos, phenoPop in enumerate(population.phenoPopList):
+                plt.plot(xList, phenoPop, label=self.phenoList[phenoPos])
+
+
+            # Create black line for total population from popSize.
+            plt.plot(xList, population.popSize, color='black', label='Total Pop')
+
+            # Adds legend key to distinguish between phenotypes.
+            plt.legend()
+
+
+        # Adjusts parameters for easier reading and shows plot.
+        plt.tight_layout()
+        plt.show()

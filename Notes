@@ -1,21 +1,3 @@
-simulate movement of individuals through time (discrete)
-	Out-most for loop
-	-track what happens to populations
-	-steps in weeks
-	-each step(1wk)- can stay in population or move to new pop
-		use landscape method for movement
-
-	if indivdual moves
-		remove from old list
-		add to new list
-		** OUTSIDE OF THE FOR LOOP
-
-	calculate and print frequency of phenotype of individuals
-	trajectory graph
-		phenotype freq
-		population sizes
-		create plots
-
 
 class individual:
     """ """
@@ -40,7 +22,7 @@ class population:
         
     def removeMember(self, leaver):
         """ """
-        self.indList.append(leaver)
+        self.indList.remove(leaver)
 
 
 class landscape:
@@ -52,24 +34,53 @@ class landscape:
 
         self.popList = []
         for i in phenoList:
-        	self.popList.append(population(numIndividuals,1))
+        	self.popList.append(population(numIndividuals,i))
 
         self.moveMatrix = []
         self.createMatrix(self.numPopulations)
 
     def createMatrix(self,numPopulations):
     	""" """
-    	for x in range(numPopulations):
-
+    	for i in range(numPopulations):
     		col = []
-    		for y in range(numPopulations):
+    		for x in range(numPopulations):
     			col.append(random.randrange(100))
 
     		self.moveMatrix.append(col)
 
 
-#    def move(self):
-#    	""" """
-#    	for x in popList
-#
-#    		for y in 
+    def move(self):
+    	""" """
+    	moveList = []
+
+	for popPosition, currentPop in enumerate(self.popList):
+	
+		for ind in currentPop.indList:
+			choice = random.choice(self.popList, self. moveMatrix[popPosition])
+			targetPop = choice[0]
+
+			if targetPop != currentPop:
+				moveList.append((ind, currentPop, targetPop))
+
+	for i in moveList:
+		currentIndividual = i[0]
+		currentPopMove = i[1]
+		targetPopMove = i[2]
+
+		currentPopMove.removeMember(currentIndividual)
+
+		targetPopMove.addMember(currentIndividual)
+
+
+
+
+graph populations
+	xList = range(steps)
+	yList = number of individuals in each population
+		each population is separate list- graph as separate lines
+
+graph trajectories for phenotype
+	xList = range(steps)
+	yList = phenotype frequency for each population
+		each population is separate list- graph as separate lines
+		each phenotype is a subplot

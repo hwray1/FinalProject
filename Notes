@@ -201,3 +201,19 @@ class landscape:
         # Adjusts parameters for easier reading and shows plot.
         plt.tight_layout()
         plt.show()
+
+
+
+Questions:
+
+
+How do the frequencies of phenotypes change in each population week-by-week as individuals move?
+The frequencies of the phenotypes fluctuate in each population week-by-week as the individuals move, but all end up being approximately the same proportion of each population as time goes on (as the number of weeks/steps increase). For example, in a scenario with 4 phenotypes, populations with 20 individuals over 20 weeks ended up with approximately equal amounts of each phenotype (5 individuals).
+
+
+What effect does an overall increase in the rate of movement (migration) have? What happens to both phenotype frequencies and population sizes when movement probabilities are not symmetric (individuals have a higher probability of moving from population A to population B, than they do of moving from population B to population A)?
+When individuals have a higher likelihood of moving from population A to B than they do for B to A, then population B will end up having a majority of the individuals. When a trial was ran with equal likelihood of A to A, B to B, and B to A, but a much greater likelihood of A to B with 2 populations with 50 individuals each, population B ended up having 70 individuals after 20 weeks. Although there were more individuals overall in population B, the frequencies in which the phenotypes occurred ended up being about half of the total population (population A with 30 individuals had approximately 15 'A' individuals and 15 'B' individuals; population B with 70 individuals had approximately 35 'A' individuals and 35 'B' individuals).
+
+
+What effect does changing the starting population sizes have on the trajectory of phenotype frequencies? In other words, what might happen if you connect big habitat patches versus small habitat patches?
+Connecting smaller habitat patches seems to have a larger impact on the phenotype frequencies as it affects a greater portion of the population- 4 individuals leaving would be a greater percentage of a population of 5 than it would a population of 50. In comparing population sizes of 5 and 50 over 20 weeks, there were multiple instances in multiple trials with the population size of 5 that a frequency, or even the total population, was 0 for a certain week. This was never seen in the population with 50.
